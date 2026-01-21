@@ -170,7 +170,8 @@ def hard_drop():
         return
 
     current_time = time.time()
-    if game_over or is_paused or current_shape is None or (current_time - last_drop_time < 0.1):
+    # if game_over or is_paused or current_shape is None or (current_time - last_drop_time < 0.1):
+    if drop_in_progress or game_over or is_paused or current_shape is None or (current_time - last_drop_time < 0.1):
         return
         
     drop_in_progress = True
