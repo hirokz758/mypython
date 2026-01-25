@@ -387,13 +387,42 @@ def place_shape():
             grid[gy][gx] = COLORS[current_shape]
 
     # Clear full lines
+    full_lines = []
+    for y in range(GRID_HEIGHT):
+        if all(grid[y][x] is not None for x in range(GRID_WIDTH)):
+            full_lines.append(y)
+    
+    if full_lines:
+        # Flash effect
+        for _ in range(3): # Flash 3 times
+            # Turn white
+            for y in full_lines:
+                for x in range(GRID_WIDTH):
+                    draw_cell(x, y, "white")
+            screen.update()
+            time.sleep(0.05)
+            
+            # Turn back (or black/invisible for blink effect)
+            for y in full_lines:
+                for x in range(GRID_WIDTH):
+                    draw_cell(x, y, grid[y][x]) # Draw original color
+            screen.update()
+            time.sleep(0.05)
+            
+        # Draw all lines black before removing (cleanup)
+        for y in full_lines:
+             for x in range(GRID_WIDTH):
+                    draw_cell(x, y, "black")
+        screen.update()
+
+
     new_grid = []
     lines_cleared = 0
     for y in range(GRID_HEIGHT):
-        if all(grid[y][x] is not None for x in range(GRID_WIDTH)):
-            lines_cleared += 1
+        if y not in full_lines:
+             new_grid.append(grid[y])
         else:
-            new_grid.append(grid[y])
+            lines_cleared += 1
 
     # Add empty rows at the top
     while len(new_grid) < GRID_HEIGHT:
